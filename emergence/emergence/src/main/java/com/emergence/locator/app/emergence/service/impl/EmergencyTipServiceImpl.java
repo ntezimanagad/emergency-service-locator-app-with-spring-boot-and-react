@@ -67,23 +67,31 @@ public class EmergencyTipServiceImpl implements EmergencyTipService {
     }
 
     @Override
-    public EmergencyTipDTO update(Long id, EmergencyTipDTO dto) {
-        try {
-            Optional<EmergencyTip> optional = repository.findById(id);
-            if (optional.isEmpty()) {
-                throw new RuntimeException("Emergency tip not found");
-            }
-            EmergencyTip entity = optional.get();
-            entity.setTitle(dto.getTitle());
-            //entity.setDescription(dto.getDescription());
-            EmergencyTip updated = repository.save(entity);
-            log.info("Updated emergency tip with id: {}", id);
-            return EmergencyTipMapper.toDTO(updated);
-        } catch (Exception e) {
-            log.error("Failed to update emergency tip", e);
-            throw new RuntimeException("Update emergency tip failed");
+public EmergencyTipDTO update(Long id, EmergencyTipDTO dto) {
+    try {
+        Optional<EmergencyTip> optional = repository.findById(id);
+        if (optional.isEmpty()) {
+            throw new RuntimeException("Emergency tip not found");
         }
+        EmergencyTip entity = optional.get();
+
+        // Update all relevant fields
+        entity.setTitle(dto.getTitle());
+        entity.setContent(dto.getContent());   // Use 'content', not 'description'
+        entity.setCategory(dto.getCategory());
+
+        // Usually don't update createdAt, but if needed:
+        // entity.setCreatedAt(dto.getCreatedAt());
+
+        EmergencyTip updated = repository.save(entity);
+        log.info("Updated emergency tip with id: {}", id);
+        return EmergencyTipMapper.toDTO(updated);
+    } catch (Exception e) {
+        log.error("Failed to update emergency tip", e);
+        throw new RuntimeException("Update emergency tip failed");
     }
+}
+
 
     @Override
     public void delete(Long id) {
