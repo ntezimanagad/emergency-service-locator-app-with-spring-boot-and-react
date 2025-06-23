@@ -1,11 +1,10 @@
 package com.emergence.locator.app.emergence.model;
 
 import jakarta.persistence.*;
-//import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Table(name = "emergency_service")
@@ -24,11 +23,16 @@ public class EmergencyService {
     private String address;
 
     @Column(columnDefinition = "geometry(Point, 4326)")
-    private org.springframework.data.geo.Point location;
+    private org.locationtech.jts.geom.Point location;
 
     private LocalDateTime createdAt;
 
     // === Getters and Setters ===
+
+    public EmergencyService() {
+    }
+
+    
 
     public EmergencyService(String name, ServiceType type, String phone, String address, Point location,
             LocalDateTime createdAt) {
@@ -40,8 +44,7 @@ public class EmergencyService {
         this.createdAt = createdAt;
     }
 
-    public EmergencyService() {
-    }
+
 
     public Long getId() {
         return id;
@@ -83,13 +86,7 @@ public class EmergencyService {
         this.address = address;
     }
 
-    public org.springframework.data.geo.Point getLocation() {
-        return location;
-    }
 
-    public void setLocation(org.springframework.data.geo.Point location) {
-        this.location = location;
-    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -97,5 +94,17 @@ public class EmergencyService {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+
+
+    public org.locationtech.jts.geom.Point getLocation() {
+        return location;
+    }
+
+
+
+    public void setLocation(org.locationtech.jts.geom.Point location) {
+        this.location = location;
     }
 }
