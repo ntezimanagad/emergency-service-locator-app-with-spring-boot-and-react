@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+import org.locationtech.jts.geom.Point;
+
 @Entity
 @Table(name = "sos_request")
 public class SOSRequest {
@@ -24,6 +26,16 @@ public class SOSRequest {
     private LocalDateTime timestamp;
 
     // === Getters and Setters ===
+
+    public SOSRequest() {
+    }
+
+    public SOSRequest(User user, Point location, String status, LocalDateTime timestamp) {
+        this.user = user;
+        this.location = location;
+        this.status = status;
+        this.timestamp = timestamp;
+    }
 
     public Long getId() {
         return id;

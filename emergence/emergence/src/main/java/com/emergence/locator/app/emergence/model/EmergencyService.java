@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.geo.Point;
+
 @Entity
 @Table(name = "emergency_service")
 public class EmergencyService {
@@ -27,6 +29,19 @@ public class EmergencyService {
     private LocalDateTime createdAt;
 
     // === Getters and Setters ===
+
+    public EmergencyService(String name, ServiceType type, String phone, String address, Point location,
+            LocalDateTime createdAt) {
+        this.name = name;
+        this.type = type;
+        this.phone = phone;
+        this.address = address;
+        this.location = location;
+        this.createdAt = createdAt;
+    }
+
+    public EmergencyService() {
+    }
 
     public Long getId() {
         return id;

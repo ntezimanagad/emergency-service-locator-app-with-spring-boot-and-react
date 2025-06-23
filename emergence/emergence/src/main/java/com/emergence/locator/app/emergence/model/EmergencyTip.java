@@ -21,7 +21,17 @@ public class EmergencyTip {
 
     private LocalDateTime createdAt;
 
+    public EmergencyTip() {
+    }
+
     // === Getters and Setters ===
+
+    public EmergencyTip(String title, String content, String category, LocalDateTime createdAt) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.createdAt = createdAt;
+    }
 
     public Long getId() {
         return id;

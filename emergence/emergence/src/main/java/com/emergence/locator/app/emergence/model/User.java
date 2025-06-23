@@ -3,6 +3,8 @@ package com.emergence.locator.app.emergence.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import org.locationtech.jts.geom.Point;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -21,6 +23,17 @@ public class User {
     private LocalDateTime createdAt;
 
     // === Getters and Setters ===
+
+    public User() {
+    }
+
+    public User(String name, String email, String phone, Point location, LocalDateTime createdAt) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.location = location;
+        this.createdAt = createdAt;
+    }
 
     public Long getId() {
         return id;

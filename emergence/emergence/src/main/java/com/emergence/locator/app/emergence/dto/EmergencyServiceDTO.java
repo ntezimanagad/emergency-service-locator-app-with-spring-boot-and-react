@@ -9,25 +9,75 @@ public class EmergencyServiceDTO {
     private double latitude;
     private double longitude;
 
+    
+
+    public EmergencyServiceDTO() {
+    }
+
+    public EmergencyServiceDTO(String name, String type, String phone, String address, double latitude,
+            double longitude) {
+        this.name = name;
+        this.type = type;
+        this.phone = phone;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public String getName() {
+        return name;
+    }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public String getType() {
+        return type;
+    }
 
-    public double getLatitude() { return latitude; }
-    public void setLatitude(double latitude) { this.latitude = latitude; }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-    public double getLongitude() { return longitude; }
-    public void setLongitude(double longitude) { this.longitude = longitude; }
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }
