@@ -16,23 +16,42 @@ public class User {
     private String name;
     private String email;
     private String phone;
-
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    private String password;
     @Column(columnDefinition = "geometry(Point, 4326)")
     private org.locationtech.jts.geom.Point location;
 
     private LocalDateTime createdAt;
-
-    // === Getters and Setters ===
-
     public User() {
     }
 
-    public User(String name, String email, String phone, Point location, LocalDateTime createdAt) {
+    
+
+    public User(String name, String email, String phone, Role role, String password, Point location,
+            LocalDateTime createdAt) {
         this.name = name;
         this.email = email;
         this.phone = phone;
+        this.role = role;
+        this.password = password;
         this.location = location;
         this.createdAt = createdAt;
+    }
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Long getId() {

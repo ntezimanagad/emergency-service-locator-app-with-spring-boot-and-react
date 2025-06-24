@@ -16,6 +16,8 @@ public class UserMapper {
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
         dto.setPhone(user.getPhone());
+        dto.setPassword(user.getPassword());
+        dto.setRole(user.getRole());
 
         Point location = user.getLocation();
         if (location != null) {
@@ -30,6 +32,8 @@ public class UserMapper {
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
+        user.setPassword(dto.getPassword());
+        user.setRole(dto.getRole());
 
         Point point = geometryFactory.createPoint(new Coordinate(dto.getLongitude(), dto.getLatitude()));
         point.setSRID(4326);
