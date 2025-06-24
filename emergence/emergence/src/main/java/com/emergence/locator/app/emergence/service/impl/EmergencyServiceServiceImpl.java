@@ -113,4 +113,21 @@ public class EmergencyServiceServiceImpl implements EmergencyServiceService {
             throw new RuntimeException("Nearby services lookup failed");
         }
     }
+
+    @Override
+public List<EmergencyServiceDTO> findNearby(double lat, double lng, double radiusInKm) {
+    try {
+        Point userLocation = geometryFactory.createPoint(new Coordinate(lng, lat));
+        userLocation.setSRID(4326);
+        double radiusInMeters = radiusInKm * 1000;
+        List<EmergencyService> nearby = repository.findNearby(userLocation, radiusInMeters);
+        return nearby.stream()
+                .map(EmergencyServiceMapper::toDTO)
+                .collect(Collectors.toList());
+    } catch (Exception e) {
+        log.error("Failed to find nearby services", e);
+        throw new RuntimeException("Nearby search failed");
+    }
+}
+
 }

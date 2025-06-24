@@ -39,14 +39,14 @@ public class EmergencyServiceController {
     // // ✅ Get service by ID
     // @GetMapping("/{id}")
     // public ResponseEntity<?> getById(@PathVariable Long id) {
-    //     try {
-    //         EmergencyServiceDTO dto = emergencyServiceService.getById(id);
-    //         return ResponseEntity.ok(dto);
-    //     } catch (Exception e) {
-    //         log.error("Failed to fetch emergency service with id {}", id, e);
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-    //                 .body("Emergency service not found");
-    //     }
+    // try {
+    // EmergencyServiceDTO dto = emergencyServiceService.getById(id);
+    // return ResponseEntity.ok(dto);
+    // } catch (Exception e) {
+    // log.error("Failed to fetch emergency service with id {}", id, e);
+    // return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    // .body("Emergency service not found");
+    // }
     // }
 
     // ✅ Create new service
@@ -87,4 +87,20 @@ public class EmergencyServiceController {
                     .body("Failed to delete emergency service");
         }
     }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<?> getNearby(
+            @RequestParam double lat,
+            @RequestParam double lng,
+            @RequestParam(defaultValue = "5") double radius) {
+        try {
+            List<EmergencyServiceDTO> nearby = emergencyServiceService.findNearby(lat, lng, radius);
+            return ResponseEntity.ok(nearby);
+        } catch (Exception e) {
+            log.error("Failed to find nearby emergency services", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to find nearby services");
+        }
+    }
+
 }

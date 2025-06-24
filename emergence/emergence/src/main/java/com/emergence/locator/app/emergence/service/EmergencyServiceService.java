@@ -10,5 +10,7 @@ public interface EmergencyServiceService {
     EmergencyServiceDTO save(EmergencyServiceDTO dto);
     EmergencyServiceDTO update(Long id, EmergencyServiceDTO dto);
     void delete(Long id);
+    List<EmergencyServiceDTO> findNearby(double lat, double lng, double radiusInKm);
+
     List<EmergencyServiceDTO> findNearby(ServiceType type, double latitude, double longitude, double radiusMeters);
 }

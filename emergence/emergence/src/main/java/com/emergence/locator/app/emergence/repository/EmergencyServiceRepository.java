@@ -19,4 +19,12 @@ public interface EmergencyServiceRepository extends JpaRepository<EmergencyServi
             @Param("type") ServiceType type,
             @Param("point") Point point,
             @Param("distance") double distanceInMeters);
+
+        
+    @Query(value = """
+        SELECT es FROM EmergencyService es
+        WHERE ST_DWithin(es.location, :point, :radiusInMeters) = true
+    """)
+    List<EmergencyService> findNearby(@Param("point") Point point, @Param("radiusInMeters") double radiusInMeters);
+
 }
