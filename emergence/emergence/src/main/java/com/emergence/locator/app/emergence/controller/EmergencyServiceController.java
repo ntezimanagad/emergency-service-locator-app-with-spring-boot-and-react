@@ -24,7 +24,7 @@ public class EmergencyServiceController {
     }
 
     // ✅ Get all services
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<?> getAll() {
         try {
             List<EmergencyServiceDTO> services = emergencyServiceService.getAll();
@@ -50,7 +50,7 @@ public class EmergencyServiceController {
     // }
 
     // ✅ Create new service
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody EmergencyServiceDTO dto) {
         try {
             EmergencyServiceDTO saved = emergencyServiceService.save(dto);
@@ -63,7 +63,7 @@ public class EmergencyServiceController {
     }
 
     // ✅ Update existing service
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody EmergencyServiceDTO dto) {
         try {
             EmergencyServiceDTO updated = emergencyServiceService.update(id, dto);
@@ -76,7 +76,7 @@ public class EmergencyServiceController {
     }
 
     // ✅ Delete service
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             emergencyServiceService.delete(id);

@@ -24,7 +24,7 @@ public class EmergencyTipController {
     }
 
     // ✅ Get all tips
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<?> getAll() {
         try {
             List<EmergencyTipDTO> tips = emergencyTipService.getAll();
@@ -37,7 +37,7 @@ public class EmergencyTipController {
     }
 
     // ✅ Get one by ID
-    @GetMapping("/{id}")
+    @GetMapping("/getById/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
             EmergencyTipDTO dto = emergencyTipService.getById(id);
@@ -50,7 +50,7 @@ public class EmergencyTipController {
     }
 
     // ✅ Create a tip
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody EmergencyTipDTO dto) {
         try {
             EmergencyTipDTO saved = emergencyTipService.save(dto);
@@ -63,7 +63,7 @@ public class EmergencyTipController {
     }
 
     // ✅ Update a tip
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody EmergencyTipDTO dto) {
         try {
             EmergencyTipDTO updated = emergencyTipService.update(id, dto);
@@ -76,7 +76,7 @@ public class EmergencyTipController {
     }
 
     // ✅ Delete a tip
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             emergencyTipService.delete(id);

@@ -24,7 +24,7 @@ public class SOSRequestController {
     }
 
     // ✅ Get all SOS requests
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<?> getAll() {
         try {
             List<SOSRequestDTO> requests = sosRequestService.getAll();
@@ -37,7 +37,7 @@ public class SOSRequestController {
     }
 
     // ✅ Get SOS request by ID
-    @GetMapping("/{id}")
+    @GetMapping("getById/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
             SOSRequestDTO dto = sosRequestService.getById(id);
@@ -50,7 +50,7 @@ public class SOSRequestController {
     }
 
     // ✅ Create new SOS request
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody SOSRequestDTO dto) {
         try {
             SOSRequestDTO saved = sosRequestService.save(dto);
@@ -63,7 +63,7 @@ public class SOSRequestController {
     }
 
     // ✅ Update existing SOS request
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody SOSRequestDTO dto) {
         try {
             SOSRequestDTO updated = sosRequestService.update(id, dto);
@@ -76,7 +76,7 @@ public class SOSRequestController {
     }
 
     // ✅ Delete SOS request
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             sosRequestService.delete(id);
