@@ -13,6 +13,7 @@ import com.emergence.locator.app.emergence.model.SOSRequest;
 import com.emergence.locator.app.emergence.model.User;
 import com.emergence.locator.app.emergence.repository.SOSRequestRepository;
 import com.emergence.locator.app.emergence.repository.UserRepository;
+import com.emergence.locator.app.emergence.service.MailService;
 import com.emergence.locator.app.emergence.service.SOSRequestService;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public class SOSRequestServiceImpl implements SOSRequestService {
     private static final Logger log = LoggerFactory.getLogger(SOSRequestServiceImpl.class);
 
     private final SOSRequestRepository repository;
+
+    private MailService mailService;
 
     private UserRepository userRepository;
 
@@ -70,6 +73,12 @@ public class SOSRequestServiceImpl implements SOSRequestService {
             // Then call mapper:
             SOSRequest entity = SOSRequestMapper.toEntity(dto, user);
             SOSRequest saved = repository.save(entity);
+            mailService.sendSosNotification(
+                    "admin@example.com",
+                    "🚨 New SOS Alert!",
+                    "An SOS request has been triggered at: \nLat: " + dto.getLatitude() +
+                            "\nLng: " + dto.getLongitude() +
+                            "\nStatus: " + dto.getStatus());
             log.info("Saved SOSRequest with id: {}", saved.getId());
             return SOSRequestMapper.toDTO(saved);
         } catch (Exception e) {
@@ -79,39 +88,38 @@ public class SOSRequestServiceImpl implements SOSRequestService {
     }
 
     @Override
-public SOSRequestDTO update(Long id, SOSRequestDTO dto) {
-    try {
-        Optional<SOSRequest> optional = repository.findById(id);
-        if (optional.isEmpty()) {
-            throw new RuntimeException("SOSRequest not found");
+    public SOSRequestDTO update(Long id, SOSRequestDTO dto) {
+        try {
+            Optional<SOSRequest> optional = repository.findById(id);
+            if (optional.isEmpty()) {
+                throw new RuntimeException("SOSRequest not found");
+            }
+            SOSRequest entity = optional.get();
+
+            // Update status
+            entity.setStatus(dto.getStatus());
+
+            // Update location from DTO lat/lon
+            Point point = new GeometryFactory().createPoint(new Coordinate(dto.getLongitude(), dto.getLatitude()));
+            point.setSRID(4326);
+            entity.setLocation(point);
+
+            // Update user: fetch user entity by id (dto.getUserId())
+            User user = userRepository.findById(dto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+            entity.setUser(user);
+
+            // Update timestamp if DTO has it (you may want to add timestamp in DTO)
+            // If not available, skip or update as needed
+
+            SOSRequest updated = repository.save(entity);
+            log.info("Updated SOSRequest with id: {}", id);
+            return SOSRequestMapper.toDTO(updated);
+        } catch (Exception e) {
+            log.error("Failed to update SOSRequest", e);
+            throw new RuntimeException("SOSRequest update failed");
         }
-        SOSRequest entity = optional.get();
-
-        // Update status
-        entity.setStatus(dto.getStatus());
-
-        // Update location from DTO lat/lon
-        Point point = new GeometryFactory().createPoint(new Coordinate(dto.getLongitude(), dto.getLatitude()));
-        point.setSRID(4326);
-        entity.setLocation(point);
-
-        // Update user: fetch user entity by id (dto.getUserId())
-        User user = userRepository.findById(dto.getUserId())
-                      .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
-        entity.setUser(user);
-
-        // Update timestamp if DTO has it (you may want to add timestamp in DTO)
-        // If not available, skip or update as needed
-
-        SOSRequest updated = repository.save(entity);
-        log.info("Updated SOSRequest with id: {}", id);
-        return SOSRequestMapper.toDTO(updated);
-    } catch (Exception e) {
-        log.error("Failed to update SOSRequest", e);
-        throw new RuntimeException("SOSRequest update failed");
     }
-}
-
 
     @Override
     public void delete(Long id) {
