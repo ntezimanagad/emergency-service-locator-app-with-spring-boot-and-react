@@ -10,12 +10,12 @@ function UserDashboard() {
       <h2>Welcome to Your Dashboard 👋</h2>
       <ul>
         <li>
-          <button onClick={() => navigate("/sos/create")}>
+          <button onClick={() => navigate("/create")}>
             🚨 Create SOS Request
           </button>
         </li>
         <li>
-          <button onClick={() => navigate("/services/nearby")}>
+          <button onClick={() => navigate("/nearby")}>
             📍 View Nearby Emergency Services
           </button>
         </li>

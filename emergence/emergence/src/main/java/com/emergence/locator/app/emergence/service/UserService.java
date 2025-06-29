@@ -53,7 +53,7 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(Role.ADMIN);
         User user2 = userRepository.save(user);
         return UserMapper.toDTO(user2);
     }

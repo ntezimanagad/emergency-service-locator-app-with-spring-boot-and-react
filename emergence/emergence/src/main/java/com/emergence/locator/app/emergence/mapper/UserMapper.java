@@ -1,14 +1,9 @@
 package com.emergence.locator.app.emergence.mapper;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-
 import com.emergence.locator.app.emergence.dto.UserDTO;
 import com.emergence.locator.app.emergence.model.User;
 
 public class UserMapper {
-    private static final GeometryFactory geometryFactory = new GeometryFactory();
 
     public static UserDTO toDTO(User user) {
         UserDTO dto = new UserDTO();
@@ -19,11 +14,9 @@ public class UserMapper {
         dto.setPassword(user.getPassword());
         dto.setRole(user.getRole());
 
-        Point location = user.getLocation();
-        if (location != null) {
-            dto.setLatitude(location.getY());
-            dto.setLongitude(location.getX());
-        }
+        dto.setLatitude(user.getLatitude());
+        dto.setLongitude(user.getLongitude());
+
         return dto;
     }
 
@@ -35,9 +28,8 @@ public class UserMapper {
         user.setPassword(dto.getPassword());
         user.setRole(dto.getRole());
 
-        Point point = geometryFactory.createPoint(new Coordinate(dto.getLongitude(), dto.getLatitude()));
-        point.setSRID(4326);
-        user.setLocation(point);
+        user.setLatitude(dto.getLatitude());
+        user.setLongitude(dto.getLongitude());
 
         return user;
     }

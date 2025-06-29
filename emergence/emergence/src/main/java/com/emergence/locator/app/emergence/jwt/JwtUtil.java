@@ -2,11 +2,13 @@ package com.emergence.locator.app.emergence.jwt;
 
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
 import com.emergence.locator.app.emergence.model.Role;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
+@Component
 public class JwtUtil {
     private static final String secretKey = "ZY9KssUP3Wx19ROeLGEoITsKaybEx20lK8JKWvYhgwA=";
 

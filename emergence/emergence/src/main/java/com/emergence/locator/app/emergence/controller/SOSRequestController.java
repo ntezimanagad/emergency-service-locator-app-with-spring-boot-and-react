@@ -3,13 +3,19 @@ package com.emergence.locator.app.emergence.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.emergence.locator.app.emergence.dto.SOSRequestDTO;
+import com.emergence.locator.app.emergence.model.User;
+import com.emergence.locator.app.emergence.repository.UserRepository;
 import com.emergence.locator.app.emergence.service.SOSRequestService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/sos")
@@ -18,9 +24,11 @@ public class SOSRequestController {
     private static final Logger log = LoggerFactory.getLogger(SOSRequestController.class);
 
     private final SOSRequestService sosRequestService;
+    private final UserRepository userRepository;
 
-    public SOSRequestController(SOSRequestService sosRequestService) {
+    public SOSRequestController(SOSRequestService sosRequestService, UserRepository userRepository) {
         this.sosRequestService = sosRequestService;
+        this.userRepository = userRepository;
     }
 
     // ✅ Get all SOS requests
@@ -86,5 +94,19 @@ public class SOSRequestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Failed to delete SOS request");
         }
+    }
+    @GetMapping("/me")
+    public ResponseEntity<?> getUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new RuntimeException("User Not Found");
+        }
+
+        User user = userOpt.get();
+
+        return ResponseEntity.ok(Map.of("id", user.getId()));
     }
 }

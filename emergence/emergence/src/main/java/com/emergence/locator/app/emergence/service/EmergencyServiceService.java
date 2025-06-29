@@ -12,5 +12,5 @@ public interface EmergencyServiceService {
     void delete(Long id);
     List<EmergencyServiceDTO> findNearby(double lat, double lng, double radiusInKm);
 
-    List<EmergencyServiceDTO> findNearby(ServiceType type, double latitude, double longitude, double radiusMeters);
+    //List<EmergencyServiceDTO> findNearby(ServiceType type, double latitude, double longitude, double radiusMeters);
 }

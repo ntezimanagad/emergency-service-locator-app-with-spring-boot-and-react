@@ -29,10 +29,9 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/budgets/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
-                        .requestMatchers("/api/accounts/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
-                        .requestMatchers("/api/categories/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
-                        .requestMatchers("/api/transactions/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers("/api/emergency-services/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers("/api/tips/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers("/api/sos/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                         // Include other routes if necessary
                         .anyRequest().authenticated())
                 .cors().and()

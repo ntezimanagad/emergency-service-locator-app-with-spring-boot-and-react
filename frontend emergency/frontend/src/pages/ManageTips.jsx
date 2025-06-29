@@ -12,7 +12,11 @@ function ManageTips() {
 
   const fetchTips = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/emergency-tips");
+      const res = await axios.get("http://localhost:8080/api/tips/get",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setTips(res.data);
     } catch (err) {
       console.error(err);
@@ -26,7 +30,7 @@ function ManageTips() {
   const handleCreate = async () => {
     try {
       await axios.post(
-        "http://localhost:8080/api/emergency-tips",
+        "http://localhost:8080/api/tips/create",
         { title, category, content },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -45,7 +49,7 @@ function ManageTips() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/emergency-tips/${id}`, {
+      await axios.delete(`http://localhost:8080/api/tips/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage("Tip deleted");

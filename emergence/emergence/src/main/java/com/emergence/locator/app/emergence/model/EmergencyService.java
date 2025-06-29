@@ -1,10 +1,7 @@
 package com.emergence.locator.app.emergence.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
-
-import org.locationtech.jts.geom.Point;
 
 @Entity
 @Table(name = "emergency_service")
@@ -22,29 +19,29 @@ public class EmergencyService {
     private String phone;
     private String address;
 
-    @Column(columnDefinition = "geometry(Point, 4326)")
-    private org.locationtech.jts.geom.Point location;
+    // Replace spatial Point with simple lat/lon double values
+    private Double latitude;
+    private Double longitude;
 
     private LocalDateTime createdAt;
 
-    // === Getters and Setters ===
+    // === Constructors ===
 
     public EmergencyService() {
     }
 
-    
-
-    public EmergencyService(String name, ServiceType type, String phone, String address, Point location,
+    public EmergencyService(String name, ServiceType type, String phone, String address, Double latitude, Double longitude,
             LocalDateTime createdAt) {
         this.name = name;
         this.type = type;
         this.phone = phone;
         this.address = address;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.createdAt = createdAt;
     }
 
-
+    // === Getters and Setters ===
 
     public Long getId() {
         return id;
@@ -86,7 +83,21 @@ public class EmergencyService {
         this.address = address;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
 
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -94,17 +105,5 @@ public class EmergencyService {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-
-
-    public org.locationtech.jts.geom.Point getLocation() {
-        return location;
-    }
-
-
-
-    public void setLocation(org.locationtech.jts.geom.Point location) {
-        this.location = location;
     }
 }

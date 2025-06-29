@@ -1,18 +1,15 @@
 package com.emergence.locator.app.emergence.service.impl;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import com.emergence.locator.app.emergence.dto.EmergencyServiceDTO;
 import com.emergence.locator.app.emergence.mapper.EmergencyServiceMapper;
 import com.emergence.locator.app.emergence.model.EmergencyService;
 import com.emergence.locator.app.emergence.model.ServiceType;
 import com.emergence.locator.app.emergence.repository.EmergencyServiceRepository;
 import com.emergence.locator.app.emergence.service.EmergencyServiceService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +20,6 @@ public class EmergencyServiceServiceImpl implements EmergencyServiceService {
 
     private static final Logger log = LoggerFactory.getLogger(EmergencyServiceServiceImpl.class);
     private final EmergencyServiceRepository repository;
-    private final GeometryFactory geometryFactory = new GeometryFactory();
 
     public EmergencyServiceServiceImpl(EmergencyServiceRepository repository) {
         this.repository = repository;
@@ -70,9 +66,9 @@ public class EmergencyServiceServiceImpl implements EmergencyServiceService {
             service.setAddress(dto.getAddress());
             service.setType(ServiceType.valueOf(dto.getType()));
 
-            Point point = geometryFactory.createPoint(new Coordinate(dto.getLongitude(), dto.getLatitude()));
-            point.setSRID(4326);
-            service.setLocation(point);
+            // Set latitude and longitude directly (no Point)
+            service.setLatitude(dto.getLatitude());
+            service.setLongitude(dto.getLongitude());
 
             EmergencyService updated = repository.save(service);
             log.info("Updated emergency service with id: {}", id);
@@ -99,35 +95,17 @@ public class EmergencyServiceServiceImpl implements EmergencyServiceService {
     }
 
     @Override
-    public List<EmergencyServiceDTO> findNearby(ServiceType type, double latitude, double longitude, double radiusMeters) {
+    public List<EmergencyServiceDTO> findNearby(double lat, double lng, double radiusInKm) {
         try {
-            Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
-            point.setSRID(4326);
-            log.info("Finding nearby services of type {} near ({}, {})", type, latitude, longitude);
-            return repository.findByTypeNearLocation(type, point, radiusMeters)
-                    .stream()
+            // You need to implement this repository method using bounding box logic
+            double radiusInMeters = radiusInKm * 1000;
+            List<EmergencyService> nearby = repository.findNearby(lat, lng, radiusInMeters);
+            return nearby.stream()
                     .map(EmergencyServiceMapper::toDTO)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            log.error("Error finding nearby emergency services", e);
-            throw new RuntimeException("Nearby services lookup failed");
+            log.error("Failed to find nearby services", e);
+            throw new RuntimeException("Nearby search failed");
         }
     }
-
-    @Override
-public List<EmergencyServiceDTO> findNearby(double lat, double lng, double radiusInKm) {
-    try {
-        Point userLocation = geometryFactory.createPoint(new Coordinate(lng, lat));
-        userLocation.setSRID(4326);
-        double radiusInMeters = radiusInKm * 1000;
-        List<EmergencyService> nearby = repository.findNearby(userLocation, radiusInMeters);
-        return nearby.stream()
-                .map(EmergencyServiceMapper::toDTO)
-                .collect(Collectors.toList());
-    } catch (Exception e) {
-        log.error("Failed to find nearby services", e);
-        throw new RuntimeException("Nearby search failed");
-    }
-}
-
 }

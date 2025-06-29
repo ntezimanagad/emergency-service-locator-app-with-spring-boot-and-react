@@ -13,7 +13,7 @@ function AllSOSRequests() {
 
   const fetchRequests = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/sos/all", {
+      const res = await axios.get("http://localhost:8080/api/sos/get", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

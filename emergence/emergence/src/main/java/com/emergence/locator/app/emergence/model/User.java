@@ -3,8 +3,6 @@ package com.emergence.locator.app.emergence.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-import org.locationtech.jts.geom.Point;
-
 @Entity
 @Table(name = "users")
 public class User {
@@ -16,43 +14,34 @@ public class User {
     private String name;
     private String email;
     private String phone;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
     private String password;
-    @Column(columnDefinition = "geometry(Point, 4326)")
-    private org.locationtech.jts.geom.Point location;
+
+    // Replace spatial Point with simple latitude and longitude
+    private Double latitude;
+    private Double longitude;
 
     private LocalDateTime createdAt;
+
     public User() {
     }
 
-    
-
-    public User(String name, String email, String phone, Role role, String password, Point location,
-            LocalDateTime createdAt) {
+    public User(String name, String email, String phone, Role role, String password,
+                Double latitude, Double longitude, LocalDateTime createdAt) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.role = role;
         this.password = password;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.createdAt = createdAt;
     }
-    public Role getRole() {
-        return role;
-    }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    // Getters and setters for all fields
 
     public Long getId() {
         return id;
@@ -86,12 +75,36 @@ public class User {
         this.phone = phone;
     }
 
-    public org.locationtech.jts.geom.Point getLocation() {
-        return location;
+    public Role getRole() {
+        return role;
     }
 
-    public void setLocation(org.locationtech.jts.geom.Point location) {
-        this.location = location;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public LocalDateTime getCreatedAt() {

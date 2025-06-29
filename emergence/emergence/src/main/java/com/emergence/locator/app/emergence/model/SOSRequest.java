@@ -1,10 +1,7 @@
 package com.emergence.locator.app.emergence.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
-
-import org.locationtech.jts.geom.Point;
 
 @Entity
 @Table(name = "sos_request")
@@ -18,24 +15,28 @@ public class SOSRequest {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(columnDefinition = "geometry(Point, 4326)")
-    private org.locationtech.jts.geom.Point location;
+    // Replace Point with latitude and longitude
+    private Double latitude;
+    private Double longitude;
 
     private String status;
 
     private LocalDateTime timestamp;
 
-    // === Getters and Setters ===
+    // === Constructors ===
 
     public SOSRequest() {
     }
 
-    public SOSRequest(User user, Point location, String status, LocalDateTime timestamp) {
+    public SOSRequest(User user, Double latitude, Double longitude, String status, LocalDateTime timestamp) {
         this.user = user;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.status = status;
         this.timestamp = timestamp;
     }
+
+    // === Getters and Setters ===
 
     public Long getId() {
         return id;
@@ -53,12 +54,20 @@ public class SOSRequest {
         this.user = user;
     }
 
-    public org.locationtech.jts.geom.Point getLocation() {
-        return location;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(org.locationtech.jts.geom.Point location) {
-        this.location = location;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getStatus() {

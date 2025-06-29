@@ -1,6 +1,20 @@
-// src/pages/services/ManageServices.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {
+  GoogleMap,
+  Marker,
+  useJsApiLoader,
+} from "@react-google-maps/api";
+
+const mapContainerStyle = {
+  width: "100%",
+  height: "400px",
+};
+
+const center = {
+  lat: -1.95,  // Kigali center or your default
+  lng: 30.06,
+};
 
 function ManageServices() {
   const [services, setServices] = useState([]);
@@ -14,9 +28,15 @@ function ManageServices() {
 
   const token = localStorage.getItem("token");
 
+  const { isLoaded } = useJsApiLoader({
+      googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    });
+
   const fetchServices = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/emergency-services");
+      const res = await axios.get("http://localhost:8080/api/emergency-services/get", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setServices(res.data);
     } catch (err) {
       console.error("Failed to load services", err);
@@ -30,7 +50,7 @@ function ManageServices() {
   const handleAdd = async () => {
     try {
       await axios.post(
-        "http://localhost:8080/api/emergency-services",
+        "http://localhost:8080/api/emergency-services/create",
         {
           name,
           type,
@@ -40,9 +60,7 @@ function ManageServices() {
           longitude: parseFloat(longitude),
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       setMessage("Service added successfully");
@@ -61,7 +79,7 @@ function ManageServices() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/emergency-services/${id}`, {
+      await axios.delete(`http://localhost:8080/api/emergency-services/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage("Service deleted");
@@ -70,6 +88,13 @@ function ManageServices() {
       console.error("Failed to delete", err);
       setMessage("Failed to delete");
     }
+  };
+
+  const handleMapClick = (event) => {
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+    setLatitude(lat.toFixed(6));
+    setLongitude(lng.toFixed(6));
   };
 
   return (
@@ -90,6 +115,21 @@ function ManageServices() {
         <input value={longitude} onChange={(e) => setLongitude(e.target.value)} placeholder="Longitude" />
         <button onClick={handleAdd}>➕ Add Service</button>
       </div>
+
+      {isLoaded && (
+        <div style={{ margin: "1rem 0" }}>
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={13}
+            onClick={handleMapClick}
+          >
+            {latitude && longitude && (
+              <Marker position={{ lat: parseFloat(latitude), lng: parseFloat(longitude) }} />
+            )}
+          </GoogleMap>
+        </div>
+      )}
 
       {message && <p>{message}</p>}
 

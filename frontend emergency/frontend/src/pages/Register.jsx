@@ -79,7 +79,7 @@ function Register() {
                     password 
                 });
                 alert("Registration successful!");
-                navigate('/login');
+                navigate('/');
             }
         } catch (error) {
             console.error(error);
@@ -258,7 +258,7 @@ function Register() {
                     <p className="text-sm text-gray-600">
                         Already have an account?{' '}
                         <button
-                            onClick={() => navigate('/login')}
+                            onClick={() => navigate('/')}
                             className="font-medium text-indigo-600 hover:text-indigo-500"
                         >
                             Sign in

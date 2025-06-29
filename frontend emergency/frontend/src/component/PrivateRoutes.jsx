@@ -2,7 +2,7 @@ import React from 'react'
 import {jwtDecode} from "jwt-decode"
 import { Navigate } from "react-router-dom"
 
-function PrivateRoute({role, children}) {
+function PrivateRoutes({role, children}) {
   const token = localStorage.getItem("token")
   if(!token) return <Navigate to="/login"/>
 
@@ -27,4 +27,4 @@ function PrivateRoute({role, children}) {
   }
 }
 
-export default PrivateRoute
+export default PrivateRoutes

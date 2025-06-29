@@ -1,12 +1,5 @@
 package com.emergence.locator.app.emergence.service.impl;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import com.emergence.locator.app.emergence.dto.SOSRequestDTO;
 import com.emergence.locator.app.emergence.mapper.SOSRequestMapper;
 import com.emergence.locator.app.emergence.model.SOSRequest;
@@ -15,6 +8,11 @@ import com.emergence.locator.app.emergence.repository.SOSRequestRepository;
 import com.emergence.locator.app.emergence.repository.UserRepository;
 import com.emergence.locator.app.emergence.service.MailService;
 import com.emergence.locator.app.emergence.service.SOSRequestService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +25,10 @@ public class SOSRequestServiceImpl implements SOSRequestService {
 
     private final SOSRequestRepository repository;
 
+    @Autowired
     private MailService mailService;
 
+    @Autowired
     private UserRepository userRepository;
 
     public SOSRequestServiceImpl(SOSRequestRepository repository) {
@@ -66,15 +66,15 @@ public class SOSRequestServiceImpl implements SOSRequestService {
     @Override
     public SOSRequestDTO save(SOSRequestDTO dto) {
         try {
-            // Fetch the user entity first (e.g., from database)
             User user = userRepository.findById(dto.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Then call mapper:
+            // Map DTO to entity without geometry
             SOSRequest entity = SOSRequestMapper.toEntity(dto, user);
             SOSRequest saved = repository.save(entity);
+
             mailService.sendSosNotification(
-                    "admin@example.com",
+                    "gad.ntezimana@gmail.com",
                     "🚨 New SOS Alert!",
                     "An SOS request has been triggered at: \nLat: " + dto.getLatitude() +
                             "\nLng: " + dto.getLongitude() +
@@ -90,27 +90,16 @@ public class SOSRequestServiceImpl implements SOSRequestService {
     @Override
     public SOSRequestDTO update(Long id, SOSRequestDTO dto) {
         try {
-            Optional<SOSRequest> optional = repository.findById(id);
-            if (optional.isEmpty()) {
-                throw new RuntimeException("SOSRequest not found");
-            }
-            SOSRequest entity = optional.get();
+            SOSRequest entity = repository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("SOSRequest not found"));
 
-            // Update status
             entity.setStatus(dto.getStatus());
+            entity.setLatitude(dto.getLatitude());
+            entity.setLongitude(dto.getLongitude());
 
-            // Update location from DTO lat/lon
-            Point point = new GeometryFactory().createPoint(new Coordinate(dto.getLongitude(), dto.getLatitude()));
-            point.setSRID(4326);
-            entity.setLocation(point);
-
-            // Update user: fetch user entity by id (dto.getUserId())
             User user = userRepository.findById(dto.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
             entity.setUser(user);
-
-            // Update timestamp if DTO has it (you may want to add timestamp in DTO)
-            // If not available, skip or update as needed
 
             SOSRequest updated = repository.save(entity);
             log.info("Updated SOSRequest with id: {}", id);

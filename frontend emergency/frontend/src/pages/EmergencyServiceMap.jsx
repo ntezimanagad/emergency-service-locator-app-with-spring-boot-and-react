@@ -20,7 +20,7 @@ function EmergencyServiceMap() {
   const [filter, setFilter] = useState("ALL");
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyA-auhtG67pLpOPyoSyrSsX39Wp4glz4C",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
   });
 
   useEffect(() => {
